@@ -8,7 +8,10 @@
         var horas = 0;
         var hor;
         var ativo;
+        var contadorparciais = 0;
         document.getElementById("parar").disabled = true;
+        document.getElementById('parcial').style.display = "none";
+
         function iniciar(){ //ativa o cronômetro com setInterval
             ativo = setInterval(cronometro, 10);
             document.getElementById("iniciar").disabled = true;
@@ -59,8 +62,12 @@
             document.getElementById('mostrador').innerHTML = `${hor}${min}${sec}${cent}`; //mostra o cronometro
         }
 
-        function parcial(){ //função que mostra a parcial numa paragrafo logo abaixo do resultado principal
-            document.getElementById('parcial').innerHTML += 'Parcial: ' + document.getElementById('mostrador').innerHTML + '<br/>';
+        function parcial(){ //função que mostra a parcial num select (com scrollbar);
+            document.getElementById('parcial').style.display = "block";
+            let item = document.createElement("option");
+            contadorparciais++;
+            item.text = `P${contadorparciais}: ` + document.getElementById('mostrador').innerHTML;
+            document.querySelector('select#parciais').appendChild(item);
         }
         function zerar(){   //função responsável por zerar o cronometro com ele ativo ou parado. Zera as parciais também
             horas = 0;

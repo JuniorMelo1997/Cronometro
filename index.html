@@ -1,22 +1,36 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-173614272-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-173614272-1');
+</script>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="cache-control"   content="no-cache" />
     <title>Cronômetro</title>
     <link rel="stylesheet" href="crostyle.css">
 </head>
 <body>
     <header><h1>Cronômetro Digital</h1></header>
     <div>
-        <p id="mostrador">00:00:00:00</p>
+        <p id="mostrador">00:00:00</p>
         <p>
             <input type="button" value="Iniciar" onclick="iniciar()" id="iniciar"/>
             <input type="button" value="Parar" onclick="parar()" id="parar"/>
             <input type="button" value="Parcial" onclick="parcial()"/>
             <input type="button" value="Zerar" id="zerar" onclick="zerar()"/>
         </p>
-        <p id="parcial"></p>
+        <p id="parcial">
+            Parciais: <br/>
+            <select name="parciais" id="parciais" size="5"></select>
+        </p>
     </div>
 
     <script src="cronscript.js"></script>

@@ -1,18 +1,39 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron&display=swap');
+
 body{
     background-color: blueviolet;
+    font-family: 'Orbitron', sans-serif;
 }
 header{
     text-align: center;
     width: 400px;
     margin: auto;
-    color: azure;
+    color: black;
 }
 div{
     text-align: center;
     margin: auto;
     width: 300px;
     border-radius: 10px;
-    background-color: azure;
+    background-color: black;
+    color: azure;
     padding: 10px;
-    font: normal 20pt Arial;
+    font-size: 30pt;
+}
+p#mostrador{
+    border-bottom: 5px solid azure;
+}
+p#parcial{
+    border-top: 1px;
+}
+input{
+    font-family: 'Orbitron', sans-serif;
+    background-color: black;
+    color: azure;
+}
+select#parciais{
+    width: 200px;
+    background-color: azure;
+    font-family: 'Orbitron', sans-serif;
+    text-align: center;
 }
