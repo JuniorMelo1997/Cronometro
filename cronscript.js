@@ -40,21 +40,23 @@
                 cent = centesimos;
 
             if(segundos < 10)
-                sec = '0' + segundos;
+                sec = '0' + segundos + ':';
             else
-                sec = segundos;
+                sec = segundos + ':';
 
             if(minutos < 10)
-                min = '0' + minutos;
+                min = '0' + minutos + ':';
             else
-                min = minutos;
+                min = minutos + ':';
             
-            if(horas < 10)
-                hor = '0' + horas;
-            else
-                hor = horas;
+            if(horas > 10)
+                hor = horas + ':';
+            else if(horas > 0)
+                hor = '0' + horas + ':';
+            else   
+                hor = '';
 
-            document.getElementById('mostrador').innerHTML = `${hor}:${min}:${sec}:${cent}`; //mostra o cronometro
+            document.getElementById('mostrador').innerHTML = `${hor}${min}${sec}${cent}`; //mostra o cronometro
         }
 
         function parcial(){ //função que mostra a parcial numa paragrafo logo abaixo do resultado principal
