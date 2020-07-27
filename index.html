@@ -11,21 +11,104 @@
   gtag('config', 'UA-173614272-1');
 </script>
 
+    <!--testando resolução para o problema de cache-->
+    <?php header("Cache-Control: no-cache, no-store, must-revalidate"); // HTTP 1.1.
+    header("Pragma: no-cache"); // HTTP 1.0.
+    header("Expires: 0"); // Proxies. ?>
+
     <meta charset="UTF-8">
+    <meta name="description" content="Crônometro online digital com parciais e contagem regressiva" />
+    <meta name="language" content="pt-br" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="cache-control"   content="no-cache" />
-    <title>Cronômetro</title>
-    <link rel="stylesheet" href="crostyle.css">
+    <meta http-equiv="pragma" content="no-cache" /><!--Essas duas tags (essa e a de cima) são para evitar cache-->
+
+    <title>Cronômetro online</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron&display=swap');
+
+body{
+    background-color: #606060;
+    font-family: 'Orbitron', sans-serif;
+}
+header{
+    text-align: center;
+    width: 370px;
+    margin: auto;
+    color: black;
+}
+div#cronometro{
+    text-align: center;
+    margin: auto;
+    width: 370px;
+    border-radius: 10px;
+    background-color: black;
+    color: azure;
+    padding: 10px;
+    font-size: 30pt;
+    height: 400px;
+    box-shadow: 2px 2px 5px grey;
+}
+p#aumentar{
+    margin-bottom: -50px;
+}
+p#mostrador{
+    height: 60px;
+    margin-top: -40px;
+    margin-bottom: -70px;
+    font-size: 33pt;
+}
+p#diminuir{
+    margin-bottom: -50px;
+}
+p#botoes{
+    border-top: 5px solid azure;
+    margin-top: -20px;
+    margin-bottom: 2px;
+}
+p#parcial{
+    margin-top: 2px;
+}
+input{
+    font-family: 'Orbitron', sans-serif;
+    background-color: black;
+    color: azure;
+}
+select#parciais{
+    width: 300px;
+    background-color: rgb(232, 252, 252);
+    font-family: 'Orbitron', sans-serif;
+    text-align: center;
+}
+div#informacoes h1{
+    text-align: center;
+}
+div#informacoes p{
+    font-size: 13pt;
+    font-weight: 500;
+    text-align: justify;
+    text-indent: 20px;
+}
+a{
+    color: black;
+}
+a:hover{
+    color: red;
+}
+    </style>
 </head>
 <body>
-    <header><h1>Cronômetro Digital</h1></header>
-    <div>
-        <p id="mostrador">00:00:00</p>
+    <header><h1>Cronômetro Digital Online</h1></header>
+    <div id="cronometro">
+        <p id="aumentar"><pre><input type="button" value="    &bigtriangleup;   " onclick="maismin()">  <input type="button" value="   &bigtriangleup;   " onclick="maissec()">  <input type="button" value="   &bigtriangleup;    " onclick="maiscent()"></pre></p>
+        <p id="mostrador"> 00: 00: 00</p>
+        <p id="diminuir"><pre><input type="button" value="    &bigtriangledown;   " onclick="menosmin()">  <input type="button" value="   &bigtriangledown;   " onclick="menossec()">  <input type="button" value="   &bigtriangledown;    " onclick="menoscent()"></pre></p>
         <p id="botoes">
             <input type="button" value="Iniciar" onclick="iniciar()" id="iniciar"/>
             <input type="button" value="Parar" onclick="parar()" id="parar"/>
             <input type="button" value="Parcial" onclick="parcial()"/>
             <input type="button" value="Zerar" id="zerar" onclick="zerar()"/>
+            <input type="button" value="Regressiva" id="regressiva" onclick="timer()"/>
         </p>
         <p id="parcial">
             Parciais: <br/>
@@ -33,6 +116,205 @@
         </p>
     </div>
 
-    <script src="cronscript.js"></script>
+    <div id="informacoes">
+        <h1>O que é um cronômetro?</h1>
+        <p>Um <em>cronômetro</em> é um relógio de precisão capaz de medir o tempo em escalas bem pequenas e precisas como segundos ou centésimos de segundos. Surgiu no século XVIII com a intenção de ajudar nas navegações marítimas e, com o tempo, evoluiu até chegar a forma que conhecemos hoje. Para mais informações <a href="https://www.infoescola.com/curiosidades/cronometro/" target="_blank">clique aqui</a></p>
+        <h1>Como funciona o cronômetro</h1>
+        <p>Você pode iniciar ou parar o cronômetro quando quiser. O botão Zerar apaga a sua medição. Se quiser salvar o seu tempo sem precisar parar o cronometro, utilize o botão Parcial. Os digitos mostram minutos, segundos e centésimos.</p>
+        <h1>Contagem Regressiva</h1>
+        <p>Para utilizar a contagem regressiva basta colocar o tempo e apertar o botão Regressiva. Para escolher o tempo aperte os botão acima ou abaixo dos digitos.</p>
+
+    </div>
+
+    <script>
+        var centesimos = 0; //Essas variáveis com = 0 são númericas e usadas para o funcionamento do cronometro
+        var cent; //Essas variáveis são char ou string e são usadas para mostrar o resultado no final 
+        var segundos = 0;
+        var sec;
+        var minutos = 0;
+        var min;
+        var horas = 0;
+        var hor;
+        var ativo; //Vai ser atribuido a essa variável o setInterval e ela sera usada para iniciar ou parar o cronometro
+        var regress; //Parecida com a variável de cima, mas usada para a contagem regressiva;
+        var code; //Usado para ver o codigo da tecla pressionada para controlar o cronometro pelo teclado;
+        var contadorparciais = 0; //Variável usada pra mostrar o numero da parcial. Ex: P1, P2, ...
+        document.getElementById("parar").disabled = true; //Quando o botão iniciar está ativado, o parar esta desativado e vice-versa.
+        document.getElementById('parcial').style.display = "none"; //A caixa de exibição das parciais só é exibida quando o usuário aperta o botão de parcial.
+
+         //mostra o cronometro;
+
+        function iniciar(){ //ativa o cronômetro com setInterval
+            ativo = setInterval(cronometro, 10);
+            document.getElementById("iniciar").disabled = true;
+            document.getElementById("parar").disabled = false;
+            document.getElementById('regressiva').disabled = true;
+        }
+        function parar(){   //para o cronômetro com clearInterval
+            clearInterval(ativo);
+            clearInterval(regress);
+            document.getElementById("iniciar").disabled = false;
+            document.getElementById("parar").disabled = true;
+            document.getElementById('regressiva').disabled = false;
+        }
+        function cronometro(){  //Função responsável por executar e mostrar 
+            centesimos ++;              //funcionamento do cronometro;
+            if(centesimos >= 100){
+                centesimos = 0;
+                segundos ++;
+            }
+            if(segundos >= 60){
+                minutos ++;
+                segundos = 0;
+            }
+            if(minutos >= 60){
+                horas++;
+                minutos = 0;
+            }
+
+            if(centesimos < 10)         //adiciona 0 antes do digito no cronometro. Ex: faz 7:5 aparecer como 07:05
+                cent = '0' + centesimos;
+            else
+                cent = centesimos;
+
+            if(segundos < 10)
+                sec = '0' + segundos + ':';
+            else
+                sec = segundos + ':';
+
+            if(minutos < 10)
+                min = '0' + minutos + ':';
+            else
+                min = minutos + ':';
+            
+            if(horas > 10)
+                hor = horas + ':';
+            else if(horas > 0)
+                hor = '0' + horas + ':';
+            else   
+                hor = '';
+
+            document.getElementById('mostrador').innerHTML = `${hor} ${min} ${sec} ${cent}`; //mostra o cronometro
+        }
+        function timer(){  //Faz ajustes necessários antes de executar a contagem regressiva;
+            if(centesimos == 0 && segundos > 0){
+                centesimos = 99;
+                segundos--;
+            }
+            else if(centesimos == 0 && segundos == 0 && minutos > 0){
+                centesimos = 99;
+                segundos = 59;
+                minutos--;
+            }
+            regress = setInterval(regressiva, 10); //chama a função de contagem regressiva
+        }
+
+        function regressiva(){ //iniciar a contagem regressiva 
+            document.getElementById("iniciar").disabled = true;
+            document.getElementById("parar").disabled = false;
+            document.getElementById('regressiva').disabled = true;
+            centesimos--;
+            if(centesimos <= 0){
+                centesimos = 99;
+                segundos--;
+            }
+            if(segundos <= 0){
+                segundos = 59;
+                minutos--;
+            }
+
+            if(minutos < 0 || segundos < 0 || centesimos < 0){ //para quando a contagem chegar em zero
+                minutos = 0;
+                segundos = 0;
+                centesimos = 0;
+                parar();
+            }
+
+            if(centesimos < 10)         //adiciona 0 antes do digito no cronometro. Ex: faz 7:5 aparecer como 07:05
+                cent = '0' + centesimos;
+            else
+                cent = centesimos;
+
+            if(segundos < 10)
+                sec = '0' + segundos + ':';
+            else
+                sec = segundos + ':';
+
+            if(minutos < 10)
+                min = '0' + minutos + ':';
+            else
+                min = minutos + ':';          
+
+                document.getElementById('mostrador').innerHTML = `${min} ${sec} ${cent}`;
+        }
+
+        function parcial(){ //função que mostra a parcial num select (com scrollbar);
+            document.getElementById('parcial').style.display = "block";
+            let item = document.createElement("option");
+            contadorparciais++;
+            item.text = `P${contadorparciais}: ` + document.getElementById('mostrador').innerHTML;
+            document.querySelector('select#parciais').appendChild(item);
+        }
+        function zerar(){   //função responsável por zerar o cronometro com ele ativo ou parado. Zera as parciais também
+            horas = 0;
+            minutos = 0;
+            segundos = 0;
+            centesimos = -1;
+            var length = document.getElementById('parciais').options.length;
+            for (i = length-1; i >= 0; i--) {
+                document.getElementById('parciais').options[i] = null;
+            }
+            document.getElementById('parcial').style.display = "none";
+            contadorparciais = 0;
+            cronometro();
+        }
+
+        document.addEventListener("keydown", controle); //O usuário pode controlar as funcionalidade pelo teclado, se preferir.
+        function controle(){
+            code = event.keyCode; //Codigo das teclas usadas: espaço = 32 p = 80 s= 83 z = 90 r = 82
+            if(code == 32)
+                iniciar();
+            if(code == 83)
+                parar();
+            if(code == 80)
+                parcial();
+            if(code == 90)
+                zerar();
+            if(code == 82)
+                timer();            
+        }
+
+        function maismin(){
+            minutos++;
+            centesimos --;
+            cronometro();
+        }
+        function maissec(){
+            segundos++;
+            centesimos --;
+            cronometro();
+        }
+        function maiscent(){
+            centesimos++;
+            centesimos --;
+            cronometro();
+        }
+        
+        function menosmin(){
+            minutos--;
+            centesimos --;
+            cronometro();
+        }
+        function menossec(){
+            segundos--;
+            centesimos --;
+            cronometro();
+        }
+        function menoscent(){
+            centesimos--;
+            centesimos --;
+            cronometro();
+        }
+        </script>
 </body>
 </html>

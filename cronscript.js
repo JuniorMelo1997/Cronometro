@@ -74,6 +74,11 @@
             minutos = 0;
             segundos = 0;
             centesimos = -1;
-            document.getElementById('parcial').innerHTML = '';
+            var length = document.getElementById('parciais').options.length;
+            for (i = length-1; i >= 0; i--) {
+                document.getElementById('parciais').options[i] = null;
+            }
+            document.getElementById('parcial').style.display = "none";
+            contadorparciais = 0;
             cronometro();
         }
