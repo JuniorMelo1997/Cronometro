@@ -26,6 +26,10 @@
     <title>Cronômetro online</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron&display=swap');
+        @font-face {
+            font-family: 'Display';
+            src: url('digital-7\(mono\).ttf');
+        }
 
 body{
     background-color: #606060;
@@ -53,10 +57,11 @@ p#aumentar{
     margin-bottom: -50px;
 }
 p#mostrador{
+    font-family: Display;
     height: 60px;
     margin-top: -40px;
     margin-bottom: -70px;
-    font-size: 33pt;
+    font-size: 40pt;
 }
 p#diminuir{
     margin-bottom: -50px;
@@ -245,7 +250,7 @@ a:hover{
             else
                 min = minutos + ':';          
 
-                document.getElementById('mostrador').innerHTML = `${min} ${sec} ${cent}`;
+                document.getElementById('mostrador').innerHTML = `${min}${sec}${cent}`;
         }
 
         function parcial(){ //função que mostra a parcial num select (com scrollbar);
